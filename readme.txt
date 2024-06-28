@@ -1,4 +1,4 @@
-=== Hello Block ===
+=== Map OSM ===
 Contributors: abuhayat
 Donate link: https://gum.co/wpdonate/
 Tags: block, key1, key2, key3, Gutenberg block
@@ -9,7 +9,7 @@ Requires PHP: 7.1
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
-Description of the Hello Block
+Description of the Map OSM
 
 == Description ==
 
@@ -74,9 +74,9 @@ Large Description
 
 == Frequently Asked Questions ==
 
-= Is Hello Block free? =
+= Is Map OSM Block free? =
 
-Yes, Hello Block is a free Gutenberg block plugin.
+Yes, Map OSM Block  is a free Gutenberg block plugin.
 
 = Does it work with any WordPress theme? =
 
@@ -97,7 +97,7 @@ You can post your questions on the [support forum here](https://wordpress.org/su
 
 == Screenshots ==
 
-1. Hello Block
+1. Map OSM Block 
 2. Settings
 
 

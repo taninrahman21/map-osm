@@ -46,17 +46,17 @@
     "height": {
       "type": "object",
       "default": {
-        "desktop": "600px",
-        "tablet": "480px",
-        "mobile": "320px"
+        "desktop": "400px",
+        "tablet": "300px",
+        "mobile": "310px"
       }
     },
     "width": {
       "type": "object",
       "default": {
         "desktop": "600px",
-        "tablet": "480px",
-        "mobile": "320px"
+        "tablet": "500px",
+        "mobile": "250px"
       }
     },
     "markerIconColor": {
