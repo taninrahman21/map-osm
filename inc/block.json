@@ -1,0 +1,90 @@
+{
+  "apiVersion": "1",
+  "name": "mosm/map-osm",
+  "title": "Map OSM",
+  "description": "Description of Map OSM.",
+  "category": "widgets",
+  "keywords": ["hello", "block", "gutenberg", "osm", "map osm"],
+  "textdomain": "map-osm",
+  "attributes": {
+    "align": {
+      "type": "string",
+      "default": ""
+    },
+    "cId": {
+      "type": "string",
+      "default": ""
+    },
+    "content": {
+      "type": "string",
+      "default": "Lorem text should be replaced with real text"
+    },
+    "latitude": {
+      "type": "number",
+      "default": 23.7644025
+    },
+    "longitude": {
+      "type": "number",
+      "default": 90.389015
+    },
+    "zoom": {
+      "type": "number",
+      "default": 17
+    },
+    "searchQuery": {
+      "type": "string",
+      "default": "Dhaka, Dhaka Metropolitan, Dhaka District, Dhaka Division, 1215, Bangladesh"
+    },
+    "controlPosition": {
+      "type": "string",
+      "default": "topleft"
+    },
+    "markerText": {
+      "type": "string",
+      "default": "Dhaka, Dhaka Metropolitan, Dhaka District, Dhaka Division, 1215, Bangladesh"
+    },
+    "height": {
+      "type": "object",
+      "default": {
+        "desktop": "600px",
+        "tablet": "480px",
+        "mobile": "320px"
+      }
+    },
+    "width": {
+      "type": "object",
+      "default": {
+        "desktop": "600px",
+        "tablet": "480px",
+        "mobile": "320px"
+      }
+    },
+    "markerIconColor": {
+      "type": "object",
+      "default": "orangered"
+    },
+    "border": {
+      "type": "object",
+      "default": {
+        "width": "2px",
+        "style": "solid",
+        "color": "orangered"
+      }
+    }
+  },
+  "supports": {
+    "align": ["wide", "full"],
+    "html": false
+  },
+  "example": {
+    "attributes": {
+      "preview": true,
+      "columns": {
+        "desktop": 1,
+        "tablet": 1,
+        "mobile": 1
+      }
+    }
+  },
+  "editorScript": "file:./../dist/editor.js"
+}

@@ -1,0 +1,31 @@
+$primaryColor: #4527a4;
+
+// Common CSS
+html {
+	scroll-behavior: smooth;
+}
+
+// Dashicon
+.dashicons {
+	font-family: dashicons !important;
+}
+
+// Block Name
+.wp-block-prefix-block-name {
+	* {
+		box-sizing: border-box;
+	}
+
+	.prefixBlockName {
+		display: inline-block;
+	}
+
+	.icon {
+		font-style: inherit;
+	}
+
+	img {
+		width: 100%;
+		max-width: 100%;
+	}
+}

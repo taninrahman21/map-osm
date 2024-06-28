@@ -1,0 +1,56 @@
+$primaryColor: #4527a4;
+
+.search-option {
+  position: relative;
+}
+.search-btn {
+  position: absolute;
+  right: 0;
+  top: 24px;
+  padding: 7px 8px;
+  background: $primaryColor;
+  border: none;
+  color: white;
+}
+.suggestion {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.suggestion span svg {
+  height: 20px;
+  fill: orangered;
+}
+
+// Css For Full Screen Icon
+.leaflet-touch .leaflet-bar a:last-child {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 448 512'%3E%3C!--!Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--%3E%3Cpath d='M32 32C14.3 32 0 46.3 0 64v96c0 17.7 14.3 32 32 32s32-14.3 32-32V96h64c17.7 0 32-14.3 32-32s-14.3-32-32-32H32zM64 352c0-17.7-14.3-32-32-32s-32 14.3-32 32v96c0 17.7 14.3 32 32 32h96c17.7 0 32-14.3 32-32s-14.3-32-32-32H64V352zM320 32c-17.7 0-32 14.3-32 32s14.3 32 32 32h64v64c0 17.7 14.3 32 32 32s32-14.3 32-32V64c0-17.7-14.3-32-32-32H320zM448 352c0-17.7-14.3-32-32-32s-32 14.3-32 32v64H320c-17.7 0-32 14.3-32 32s14.3 32 32 32h96c17.7 0 32-14.3 32-32V352z'/%3E%3C/svg%3E"); /* Add the correct base64 or URL for the fullscreen icon */
+  background-size: 18px 18px;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+// Settings Css Starts here
+.my-tab-panel .components-tab-panel__tabs {
+  display: flex;
+  justify-content: space-between;
+}
+.components-button.components-tab-panel__tabs-item {
+  font-size: 20px;
+  width: 100%;
+  border-bottom: 1px solid #eee;
+  display: flex;
+  justify-content: center;
+}
+.components-button.components-tab-panel__tabs-item.active-tab {
+  background-color: #635bbc;
+  color: #ffffff;
+}
+
+// ToggleControl Style
+.components-form-toggle.is-checked .components-form-toggle__track {
+  background-color: #635bbc;
+  border-color: #635bbc;
+  box-shadow: 0 0 0 var(--wp-admin-border-width-focus) #fff,
+    0 0 0 calc(var(--wp-admin-border-width-focus) * 2) #635bbc;
+}
