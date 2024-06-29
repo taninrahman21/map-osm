@@ -70,8 +70,35 @@
         "style": "solid",
         "color": "orangered"
       }
+    },
+    "mapLayer": {
+      "type": "string",
+      "default": "standard"
+    },
+    "mapOptions": {
+      "type": "object",
+      "default": {
+        "showPrintButton": true,
+        "printBtnPosition": "topright",
+        "showImageDownload": false,
+        "showPdfDownload": false
+      }
+    },
+    "downloadImgBtn": {
+      "type": "object",
+      "default": {
+        "text": "Download as Image"
+      }
+    },
+    "downloadPdfBtn": {
+      "type": "object",
+      "default": {
+        "text": "Download as PDF"
+      }
     }
   },
+
+
   "supports": {
     "align": ["wide", "full"],
     "html": false

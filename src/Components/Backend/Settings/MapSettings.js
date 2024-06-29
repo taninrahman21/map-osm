@@ -1,12 +1,13 @@
-import { PanelBody, RangeControl, SelectControl, TextControl } from '@wordpress/components';
+import { PanelBody, RangeControl, SelectControl, TextControl, ToggleControl } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 import React from 'react';
 import '../../../editor.scss';
+import { updateData } from '../../../utils/functions';
 import { MarkerIcon } from '../../../utils/icons';
 
 
 const MapSettings = ({ attributes, setAttributes, handleInputChange, handleSuggestionClick, handleSearch, suggestions }) => {
-  const { latitude, longitude, zoom, searchQuery, controlPosition, markerText } = attributes;
+  const { latitude, longitude, zoom, searchQuery, controlPosition, markerText, mapLayer, mapOptions } = attributes;
 
 
   return (
@@ -59,6 +60,17 @@ const MapSettings = ({ attributes, setAttributes, handleInputChange, handleSugge
         />
 
         <SelectControl
+          label={__('Map Layer', 'map-osm')}
+          value={mapLayer}
+          options={[
+            { label: 'Standard', value: 'standard' },
+            { label: 'Satellite', value: 'satellite' },
+            { label: 'Terrain', value: 'terrain' }
+          ]}
+          onChange={(value) => setAttributes({ mapLayer: value })}
+        />
+
+        <SelectControl
           label="Select Controller Position"
           value={controlPosition}
           options={[
@@ -70,6 +82,39 @@ const MapSettings = ({ attributes, setAttributes, handleInputChange, handleSugge
           onChange={value => setAttributes({ controlPosition: value })}
         />
 
+      </PanelBody>
+
+      <PanelBody title={__('Map Options', ("map-osm"))} initialOpen={false}>
+        <ToggleControl
+          label="Show Print Map Button"
+          checked={mapOptions.showPrintButton}
+          onChange={(newValue) => setAttributes({ mapOptions: updateData(mapOptions, newValue, 'showPrintButton') })}
+        />
+        {
+          mapOptions.showPrintButton && (
+            <SelectControl
+              label="Button Position"
+              value={mapOptions.printBtnPosition}
+              options={[
+                { value: 'topleft', label: 'Top Left' },
+                { value: 'topright', label: 'Top Right' },
+                { value: 'bottomleft', label: 'Bottom Left' },
+                { value: 'bottomright', label: 'Bottom Right' }
+              ]}
+              onChange={value => setAttributes({ mapOptions: updateData(mapOptions, value, 'printBtnPosition') })}
+            />
+          )
+        }
+        <ToggleControl
+          label="Show Download Image Button"
+          checked={mapOptions.showImgDownload}
+          onChange={(newValue) => setAttributes({ mapOptions: updateData(mapOptions, newValue, 'showImgDownload') })}
+        />
+        <ToggleControl
+          label="Show Download PDF Button"
+          checked={mapOptions.showPdfDownload}
+          onChange={(newValue) => setAttributes({ mapOptions: updateData(mapOptions, newValue, 'showPdfDownload') })}
+        />
       </PanelBody>
     </>
   );

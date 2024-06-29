@@ -1,3 +1,6 @@
+import { __ } from '@wordpress/i18n';
+import { toPng } from 'html-to-image';
+import jsPDF from 'jspdf';
 import L from 'leaflet';
 import 'leaflet.fullscreen';
 import 'leaflet.fullscreen/Control.FullScreen.css';
@@ -7,7 +10,7 @@ import '../../editor.scss';
 import Styles from '../Common/Styles';
 
 const Frontend = ({ attributes }) => {
-  const { cId, latitude, longitude, zoom, searchQuery, markerIconColor, controlPosition, markerText } = attributes;
+  const { cId, latitude, longitude, zoom, searchQuery, markerIconColor, controlPosition, markerText, mapLayer, mapOptions } = attributes;
 
 
 
@@ -32,10 +35,30 @@ const Frontend = ({ attributes }) => {
     const map = L.map('map', { fullscreenControl: true, fullscreenControlOptions: { position: controlPosition } }).setView([latitude, longitude], zoom);
 
 
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    // Define different base layers
+    const standardLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: '&copy; <a href="https://www.bplugins.com">bPlugins</a> contributors',
       maxZoom: 19
-    }).addTo(map);
+    });
+
+    const satelliteLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+      attribution: '&copy; <a href="https://www.bplugins.com">bPlugins</a> contributors',
+      maxZoom: 19
+    });
+
+    const terrainLayer = L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; <a href="https://www.bplugins.com">bPlugins</a> contributors',
+      maxZoom: 17
+    });
+
+    const layers = {
+      standard: standardLayer,
+      satellite: satelliteLayer,
+      terrain: terrainLayer,
+    };
+
+    // Add the selected layer to the map
+    layers[mapLayer].addTo(map);
 
     const customIcon = createCustomIcon(markerIconColor);
 
@@ -43,10 +66,53 @@ const Frontend = ({ attributes }) => {
       .bindPopup(`<b>${markerText}</b>`)
       .openPopup();
 
+    // Create Custom Print Button
+    if (mapOptions.showPrintButton) {
+      const printButton = L.control({ position: mapOptions.printBtnPosition });
+      printButton.onAdd = function () {
+        const div = L.DomUtil.create('div', 'leaflet-bar leaflet-control leaflet-control-custom');
+        div.innerHTML = '<a href="#" title="Print Map" id="print-map-btn"></a>';
+        div.onclick = function () {
+          window.print();
+        };
+        return div;
+      };
+
+      printButton.addTo(map);
+    }
 
     return () => map.remove();
-  }, [latitude, longitude, zoom, searchQuery, controlPosition, markerText, markerIconColor]);
 
+  }, [latitude, longitude, zoom, searchQuery, controlPosition, markerText, markerIconColor, mapLayer, mapOptions]);
+
+  // Function to export the map as an image
+  const exportAsImage = () => {
+    toPng(document.getElementById('map'))
+      .then((dataUrl) => {
+        const link = document.createElement('a');
+        link.href = dataUrl;
+        link.download = 'map.png';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      })
+      .catch((error) => {
+        console.error('Failed to export map as image:', error);
+      });
+  };
+
+  // Function to export the map as a PDF
+  const exportAsPdf = () => {
+    toPng(document.getElementById('map'))
+      .then((dataUrl) => {
+        const pdf = new jsPDF();
+        pdf.addImage(dataUrl, 'PNG', 0, 0, 210, 297);
+        pdf.save('map.pdf');
+      })
+      .catch((error) => {
+        console.error('Failed to export map as PDF:', error);
+      });
+  };
 
 
   return (
@@ -55,6 +121,8 @@ const Frontend = ({ attributes }) => {
 
       <div id={`mainWrapper-${cId}`}>
         <div id="map"></div>
+        <button className='img-download-btn' onClick={exportAsImage}>{__('Export as Image', 'map-osm')}</button>
+        <button className='pdf-download-btn' onClick={exportAsPdf}>{__('Export as PDF', 'map-osm')}</button>
       </div>
     </>
   );
