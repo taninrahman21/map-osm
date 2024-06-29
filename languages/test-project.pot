@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2024-06-28T16:45:11+00:00\n"
+"POT-Creation-Date: 2024-06-29T13:45:27+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.10.0\n"
 "X-Domain: map-osm\n"
@@ -35,53 +35,76 @@ msgid "http://bplugins.com"
 msgstr ""
 
 #: dist/editor.js:14
-#: dist/editor.js:32731
+#: dist/editor.js:34194
 msgid "Map Settings"
 msgstr ""
 
 #: dist/editor.js:14
-#: dist/editor.js:32734
+#: dist/editor.js:34197
 msgid "Search Address"
 msgstr ""
 
 #: dist/editor.js:14
-#: dist/editor.js:32738
+#: dist/editor.js:34201
 msgid "SEARCH"
 msgstr ""
 
 #: dist/editor.js:14
-#: dist/editor.js:32752
+#: dist/editor.js:34215
 msgid "Latitude"
 msgstr ""
 
 #: dist/editor.js:14
-#: dist/editor.js:32758
+#: dist/editor.js:34221
 msgid "Longitude"
 msgstr ""
 
 #: dist/editor.js:14
-#: dist/editor.js:32765
+#: dist/editor.js:34228
 msgid "Marker Text"
 msgstr ""
 
 #: dist/editor.js:14
-#: dist/editor.js:32771
+#: dist/editor.js:34234
 msgid "Zoom Level"
 msgstr ""
 
 #: dist/editor.js:14
-#: dist/editor.js:36255
+#: dist/editor.js:34242
+msgid "Map Layer"
+msgstr ""
+
+#: dist/editor.js:14
+msgid "Map Options"
+msgstr ""
+
+#: dist/editor.js:14
+#: dist/editor.js:36512
 msgid "Map styles"
 msgstr ""
 
 #: dist/editor.js:14
-#: dist/editor.js:36259
+#: dist/editor.js:36516
 msgid "Width"
 msgstr ""
 
 #: dist/editor.js:14
-#: dist/editor.js:36272
+#: dist/editor.js:36529
 msgid "Height"
+msgstr ""
+
+#: dist/editor.js:340
+#: dist/script.js:332
+#: dist/editor.js:39843
+#: dist/script.js:18289
+msgid "Export as Image"
+msgstr ""
+
+#: dist/editor.js:340
+#: dist/script.js:332
+#: dist/editor.js:39844
+#: dist/script.js:18290
+msgid "Export as PDF"
 msgstr ""
 
 #: inc/block.json

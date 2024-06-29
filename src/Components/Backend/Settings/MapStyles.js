@@ -10,7 +10,6 @@ import { updateData } from '../../../utils/functions';
 const MapStyles = compose(withSelect((select) => { return { device: select("core/edit-post").__experimentalGetPreviewDeviceType()?.toLowerCase() } }))(({ attributes, setAttributes, device }) => {
   const { height, width, markerIconColor, border } = attributes;
 
-  console.log('Height:', height, 'Width:', width);
 
   const colors = [
     { name: 'white', color: '#fff' },
