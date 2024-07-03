@@ -22,6 +22,110 @@ $primaryColor: #4527a4;
   fill: orangered;
 }
 
+// Leaflet Bottom Left Styles
+.leaflet-bottom.leaflet-left {
+  display: flex;
+  flex-direction: column;
+  width: fit-content;
+}
+.leaflet-bottom.leaflet-left .leaflet-control-zoom.leaflet-bar.leaflet-control {
+  width: fit-content;
+  order: 2;
+}
+.leaflet-bottom.leaflet-left .custom-layers-control {
+  width: fit-content;
+  order: 3;
+}
+
+// Custom Layers Control
+.custom-layers-control .layers-wrapper {
+  position: relative;
+}
+
+.custom-layers-control .layers-wrapper .layers-trigger {
+  cursor: pointer;
+  display: inline-block;
+  position: relative;
+  height: 63px;
+  width: 54px;
+  border-radius: 8px;
+}
+.custom-layers-control .layers-wrapper .layers-trigger img {
+  width: 100%;
+  height: 100%;
+}
+.custom-layers-control .layers-wrapper .layers-trigger p {
+  position: absolute;
+  bottom: 5px;
+  left: 10px;
+  margin: 0;
+  padding: 0;
+}
+
+.custom-layers-control .layers-wrapper .layer-options {
+  display: none;
+  background-color: white;
+  border-radius: 6px;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  bottom: 3px;
+  left: 59px;
+}
+.custom-layers-control .layers-wrapper .layer-options .layer-option {
+  display: flex;
+  flex-direction: column;
+  padding: 5px 8px;
+  cursor: pointer;
+}
+.custom-layers-control .layers-wrapper .layer-options .layer-option:hover img {
+  border: 1px solid blue;
+  border-radius: 7px;
+}
+.custom-layers-control .layers-wrapper .layer-options .layer-option:hover span {
+  color: blue;
+}
+.custom-layers-control .layers-wrapper .layer-options .layer-option img {
+  width: 38px;
+  margin: 0 auto;
+}
+
+.custom-layers-control .layers-wrapper:hover .layer-options {
+  display: flex;
+}
+// From To Location Div CSS Starts Here
+.from-to-location-div {
+  flex-direction: row;
+  align-items: center;
+  position: absolute;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000;
+  gap: 10px;
+}
+.from-to-location-div .from-input,
+.from-to-location-div .destination-input {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.from-to-location-div .from-input svg {
+  height: 25px;
+  fill: green;
+}
+.from-to-location-div .destination-input svg {
+  height: 25px;
+  fill: red;
+}
+// From To Location Div CSS Ends Here
+
+.leaflet-routing-container .leaflet-routing-collapse-btn {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3C!--!Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--%3E%3Cpath d='M227.7 11.7c15.6-15.6 40.9-15.6 56.6 0l216 216c15.6 15.6 15.6 40.9 0 56.6l-216 216c-15.6 15.6-40.9 15.6-56.6 0l-216-216c-15.6-15.6-15.6-40.9 0-56.6l216-216zm87.6 137c-4.6-4.6-11.5-5.9-17.4-3.5s-9.9 8.3-9.9 14.8v56H224c-35.3 0-64 28.7-64 64v48c0 13.3 10.7 24 24 24s24-10.7 24-24V280c0-8.8 7.2-16 16-16h64v56c0 6.5 3.9 12.3 9.9 14.8s12.9 1.1 17.4-3.5l80-80c6.2-6.2 6.2-16.4 0-22.6l-80-80z'/%3E%3C/svg%3E");
+  background-position: center;
+  background-size: 18px 18px;
+  background-repeat: no-repeat;
+}
 // Css For Full Screen Icon
 .leaflet-touch .leaflet-bar a {
   background-position: center;

@@ -8,7 +8,9 @@ import { Device } from '../../../../../Components/Device/Device';
 import { updateData } from '../../../utils/functions';
 
 const MapStyles = compose(withSelect((select) => { return { device: select("core/edit-post").__experimentalGetPreviewDeviceType()?.toLowerCase() } }))(({ attributes, setAttributes, device }) => {
-  const { height, width, markerIconColor, border } = attributes;
+  const { markerIconColor, mapLayout, mapOptions } = attributes;
+  
+  const { height, width, border } = mapLayout;
 
 
   const colors = [
@@ -32,7 +34,7 @@ const MapStyles = compose(withSelect((select) => { return { device: select("core
           </PanelRow>
           <UnitControl
             value={width[device]}
-            onChange={(value) => setAttributes({ width: updateData(width, value, device) })}
+            onChange={(value) => setAttributes({ mapLayout: updateData(mapLayout, value, "width", device) })}
             step={1}
           />
         </div>
@@ -45,7 +47,7 @@ const MapStyles = compose(withSelect((select) => { return { device: select("core
           </PanelRow>
           <UnitControl
             value={height[device]}
-            onChange={(value) => setAttributes({ height: updateData(height, value, device) })}
+            onChange={(value) => setAttributes({ mapLayout: updateData(mapLayout, value, "height", device) })}
             step={1}
           />
         </div>

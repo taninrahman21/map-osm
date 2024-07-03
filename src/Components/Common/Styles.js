@@ -1,10 +1,13 @@
 import React from 'react';
 
 const Styles = ({ attributes }) => {
-  const { width, height, border, cId, mapOptions } = attributes;
+  const { cId, mapOptions, mapLayout } = attributes;
+  const { width, height, border } = mapLayout;
+  const { showImgDownload, showPdfDownload, allowUsersToSetFromToLocation } = mapOptions;
 
   const mainContainer = `#mainWrapper-${cId}`;
   const map = `${mainContainer} #map`;
+  const fromToLocationDiv = `${map} .from-to-location-div`;
   const imgBtn = `${mainContainer} .img-download-btn`;
   const pdfBtn = `${mainContainer} .pdf-download-btn`;
 
@@ -18,12 +21,15 @@ const Styles = ({ attributes }) => {
             border: ${border.width} ${border.style} ${border.color};
           }
           ${imgBtn} {
-            display: ${mapOptions.showImgDownload ? 'inline-block' : 'none'};
+            display: ${showImgDownload ? 'inline-block' : 'none'};
             margin-right: 7px;
           }
             
           ${pdfBtn} {
-            display: ${mapOptions.showPdfDownload ? 'inline-block' : 'none'};
+            display: ${showPdfDownload ? 'inline-block' : 'none'};
+          }
+          ${fromToLocationDiv} {
+           display: ${allowUsersToSetFromToLocation? 'flex' : 'none'};
           }
 
           @media only screen and (min-width:641px) and (max-width: 1024px){

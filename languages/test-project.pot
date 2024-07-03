@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2024-06-29T13:45:27+00:00\n"
+"POT-Creation-Date: 2024-06-29T13:48:06+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.10.0\n"
 "X-Domain: map-osm\n"
@@ -79,30 +79,30 @@ msgid "Map Options"
 msgstr ""
 
 #: dist/editor.js:14
-#: dist/editor.js:36512
+#: dist/editor.js:36511
 msgid "Map styles"
 msgstr ""
 
 #: dist/editor.js:14
-#: dist/editor.js:36516
+#: dist/editor.js:36515
 msgid "Width"
 msgstr ""
 
 #: dist/editor.js:14
-#: dist/editor.js:36529
+#: dist/editor.js:36528
 msgid "Height"
 msgstr ""
 
 #: dist/editor.js:340
 #: dist/script.js:332
-#: dist/editor.js:39843
+#: dist/editor.js:39842
 #: dist/script.js:18289
 msgid "Export as Image"
 msgstr ""
 
 #: dist/editor.js:340
 #: dist/script.js:332
-#: dist/editor.js:39844
+#: dist/editor.js:39843
 #: dist/script.js:18290
 msgid "Export as PDF"
 msgstr ""
