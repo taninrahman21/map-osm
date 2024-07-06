@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2024-07-06T08:48:13+00:00\n"
+"POT-Creation-Date: 2024-07-06T13:25:36+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.10.0\n"
 "X-Domain: map-osm\n"
@@ -99,66 +99,66 @@ msgid "Map Options"
 msgstr ""
 
 #: dist/editor.js:14
-#: dist/editor.js:55376
+#: dist/editor.js:55386
 msgid "Map styles"
 msgstr ""
 
 #: dist/editor.js:14
-#: dist/editor.js:55380
+#: dist/editor.js:55390
 msgid "Width"
 msgstr ""
 
 #: dist/editor.js:14
-#: dist/editor.js:55393
+#: dist/editor.js:55403
 msgid "Height"
 msgstr ""
 
 #: dist/editor.js:14
-#: dist/editor.js:55419
+#: dist/editor.js:55426
 msgid "Marker Styles"
 msgstr ""
 
 #: dist/editor.js:14
-#: dist/editor.js:55423
+#: dist/editor.js:55430
 msgid "Marker Icon Size"
 msgstr ""
 
 #: dist/editor.js:14
-#: dist/editor.js:55436
+#: dist/editor.js:55443
 msgid "Marker Icon Color"
 msgstr ""
 
 #: dist/editor.js:14
-#: dist/editor.js:55444
+#: dist/editor.js:55451
 msgid "Current Location Marker Color"
 msgstr ""
 
 #: dist/editor.js:14
-#: dist/editor.js:55452
+#: dist/editor.js:55459
 msgid "Start Point Marker Color"
 msgstr ""
 
 #: dist/editor.js:14
-#: dist/editor.js:55461
+#: dist/editor.js:55468
 msgid "End Point Marker Color"
 msgstr ""
 
 #: dist/editor.js:14
-#: dist/editor.js:55470
+#: dist/editor.js:55477
 msgid "Routing Line Color"
 msgstr ""
 
 #: dist/editor.js:340
 #: dist/script.js:332
-#: dist/editor.js:59033
-#: dist/script.js:37159
+#: dist/editor.js:59057
+#: dist/script.js:37155
 msgid "Export as Image"
 msgstr ""
 
 #: dist/editor.js:340
 #: dist/script.js:332
-#: dist/editor.js:59034
-#: dist/script.js:37160
+#: dist/editor.js:59058
+#: dist/script.js:37156
 msgid "Export as PDF"
 msgstr ""
 

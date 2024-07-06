@@ -19,10 +19,8 @@ const Frontend = ({ attributes }) => {
   const mapRef = useRef(null);
   const mapContainerRef = useRef(null);
 
-  console.log(routeLineColor);
 
   const [newMapLayer, setNewMapLayer] = useState(mapLayer);
-  const [displayLocation, setDisplayLocation] = useState({ lat: latitude, lon: longitude, markerText, });
 
 
   const layersWithImg = [
@@ -58,7 +56,7 @@ const Frontend = ({ attributes }) => {
       mapRef.current.remove();
     }
 
-    const map = L.map(mapContainerRef.current, { fullscreenControl: true, fullscreenControlOptions: { position: controlPosition } }).setView([displayLocation.lat, displayLocation.lon], zoom);
+    const map = L.map(mapContainerRef.current, { fullscreenControl: true, fullscreenControlOptions: { position: controlPosition } }).setView([latitude || currentLocation.lat, longitude || currentLocation.lon], zoom);
     mapRef.current = map;
 
 
