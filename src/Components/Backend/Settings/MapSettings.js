@@ -11,7 +11,7 @@ import { MarkerIcon } from '../../../utils/icons';
 const MapSettings = ({ attributes, setAttributes }) => {
   const { mapOptions, mapOsm } = attributes;
   const { latitude, longitude, markerText, zoom, searchQuery, mapLayer, fromLocation, toLocation, currentLocation } = mapOsm;
-  const { showPrintButton, showImgDownload, controlPosition, printBtnPosition, showPdfDownload, showMarkerText, showDirectionFromYourLocation, getYourLocation, allowUsersToSetFromToLocation, getLocationControlPosition } = mapOptions;
+  const { showPrintButton, showImgDownload, controlPosition, printBtnPosition, showPdfDownload, showMarkerText, showDirectionFromYourLocation, getYourLocation, allowUsersToSetFromToLocation, getLocationControlPosition, setSearchLocationOnDblClick, showLocationDetailsOnClick } = mapOptions;
   const [toLocationSuggestions, setToLocationSuggestions] = useState([]);
   const [fromLocationSuggestions, setFromLocationSuggestions] = useState([]);
 
@@ -296,15 +296,25 @@ const MapSettings = ({ attributes, setAttributes }) => {
       </PanelBody>
 
       <PanelBody title={__('Map Options', ("map-osm"))} initialOpen={false}>
-        <ToggleControl
+        {/* <ToggleControl
           label="Allow Users To Set From To Location"
           checked={allowUsersToSetFromToLocation}
           onChange={(newValue) => setAttributes({ mapOptions: updateData(mapOptions, newValue, 'allowUsersToSetFromToLocation') })}
-        />
+        /> */}
         <ToggleControl
           label="Show Print Map Button"
           checked={showPrintButton}
           onChange={(newValue) => setAttributes({ mapOptions: updateData(mapOptions, newValue, 'showPrintButton') })}
+        />
+        <ToggleControl
+          label="Set Search Location On Double Click"
+          checked={setSearchLocationOnDblClick}
+          onChange={(newValue) => setAttributes({ mapOptions: updateData(mapOptions, newValue, 'setSearchLocationOnDblClick') })}
+        />
+        <ToggleControl
+          label="Show Location Details OnClick"
+          checked={showLocationDetailsOnClick}
+          onChange={(newValue) => setAttributes({ mapOptions: updateData(mapOptions, newValue, 'showLocationDetailsOnClick') })}
         />
         {
           mapOptions.showPrintButton && (

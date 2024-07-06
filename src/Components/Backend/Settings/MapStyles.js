@@ -57,15 +57,12 @@ const MapStyles = compose(withSelect((select) => { return { device: select("core
         </div>
 
 
-
-
-
         {/* Border Color */}
         <div>
           <BorderControl
             colors={colors}
             label={__('Border')}
-            onChange={value => setAttributes({ border: value })}
+            onChange={value => setAttributes({ mapLayout: updateData(mapLayout, value, "border")})}
             value={border}
           />
         </div>
