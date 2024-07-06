@@ -1,15 +1,117 @@
 import { PanelBody, RangeControl, SelectControl, TextControl, ToggleControl } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
-import React from 'react';
+import { produce } from 'immer';
+import { debounce } from 'lodash';
+import React, { useState } from 'react';
 import '../../../editor.scss';
 import { updateData } from '../../../utils/functions';
 import { MarkerIcon } from '../../../utils/icons';
 
 
-const MapSettings = ({ attributes, setAttributes, handleInputChange, handleSuggestionClick, handleSearch, suggestions, handleFromLocationSearch, handleFromLocationSuggestionClick, handleFromLocationInput, fromLocationSuggestions }) => {
+const MapSettings = ({ attributes, setAttributes }) => {
   const { mapOptions, mapOsm } = attributes;
-  const { latitude, longitude, markerText, zoom, searchQuery, mapLayer, fromLocation } = mapOsm;
-  const { showPrintButton, showImgDownload, controlPosition, printBtnPosition, showPdfDownload, showMarkerText, showDirectionFromYourLocation, getYourLocation, allowUsersToSetFromToLocation } = mapOptions;
+  const { latitude, longitude, markerText, zoom, searchQuery, mapLayer, fromLocation, toLocation, currentLocation } = mapOsm;
+  const { showPrintButton, showImgDownload, controlPosition, printBtnPosition, showPdfDownload, showMarkerText, showDirectionFromYourLocation, getYourLocation, allowUsersToSetFromToLocation, getLocationControlPosition } = mapOptions;
+  const [toLocationSuggestions, setToLocationSuggestions] = useState([]);
+  const [fromLocationSuggestions, setFromLocationSuggestions] = useState([]);
+
+
+  // Fetch Location Suggestions Function
+  const fetchSuggestions = debounce((query, callback) => {
+    fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${query}`)
+      .then(response => response.json())
+      .then(data => {
+        if (data) {
+          callback(data);
+        }
+      })
+      .catch(error => console.error('Error fetching suggestions:', error));
+  }, 300);
+
+  // Handle Map Settings Input Change Function
+  const handleSettingsInputChange = (value, type) => {
+    if (type === 'from') {
+      setAttributes({
+        mapOsm: produce(mapOsm, draft => {
+          draft.fromLocation.locationName = value;
+        })
+      });
+      fetchSuggestions(value, setFromLocationSuggestions);
+    } else if (type === 'to') {
+      setAttributes({
+        mapOsm: produce(mapOsm, draft => {
+          draft.searchQuery = value;
+          draft.markerText = value;
+        })
+      });
+      fetchSuggestions(value, setToLocationSuggestions);
+    }
+  };
+
+  const searchLocationViaInputText = async (value) => {
+    return fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${value}`)
+      .then(response => response.json())
+      .then(data => {
+        return data;
+      }).catch(error => console.error('Error fetching suggestions:', error));
+  }
+
+  const handleSearchBtnClick = async (value, type) => {
+    const locations = await searchLocationViaInputText(value);
+    let place;
+
+    if (locations && locations.length > 0) {
+      place = locations[0];
+    }
+
+    if (type === "from") {
+      setAttributes({
+        mapOsm: produce(mapOsm, draft => {
+          draft.fromLocation.lat = parseFloat(place.lat);
+          draft.fromLocation.lon = parseFloat(place.lon);
+        })
+      });
+      setFromLocationSuggestions([]);
+    } else if (type === "to") {
+      setAttributes({
+        mapOsm: produce(mapOsm, draft => {
+          draft.latitude = parseFloat(place.lat);
+          draft.longitude = parseFloat(place.lon);
+          draft.toLocation.lat = parseFloat(place.lat);
+          draft.toLocation.lon = parseFloat(place.lon);
+          draft.toLocation.locationName = searchQuery;
+        })
+      });
+      setToLocationSuggestions([]);
+    }
+  };
+
+  // Handle Suggestion Click Function
+  const handleSuggestionClick = (suggestion, type) => {
+    if (type === "from") {
+      setAttributes({
+        mapOsm: produce(mapOsm, draft => {
+          draft.fromLocation.lat = parseFloat(suggestion.lat);
+          draft.fromLocation.lon = parseFloat(suggestion.lon);
+          draft.fromLocation.locationName = suggestion.display_name;
+        })
+      });
+      setFromLocationSuggestions([]);
+    } else if (type === "to") {
+      setAttributes({
+        mapOsm: produce(mapOsm, draft => {
+          draft.latitude = parseFloat(suggestion.lat);
+          draft.longitude = parseFloat(suggestion.lon);
+          draft.toLocation.lat = parseFloat(suggestion.lat);
+          draft.toLocation.lon = parseFloat(suggestion.lon);
+          draft.toLocation.locationName = suggestion.display_name;
+          draft.searchQuery = suggestion.display_name;
+          draft.markerText = suggestion.display_name;
+        })
+      });
+      setToLocationSuggestions([]);
+    }
+  }
 
 
   const validateLatitude = (value) => {
@@ -29,6 +131,7 @@ const MapSettings = ({ attributes, setAttributes, handleInputChange, handleSugge
       alert(__('Please enter a valid longitude between -180 and 180.', 'map-osm'));
     }
   };
+
   const validateFromLat = (value) => {
     const lat = parseFloat(value);
     if (lat >= -90 && lat <= 90) {
@@ -47,6 +150,7 @@ const MapSettings = ({ attributes, setAttributes, handleInputChange, handleSugge
     }
   };
 
+
   return (
     <>
       <PanelBody title={__('Map Settings', 'map-osm')}>
@@ -57,25 +161,25 @@ const MapSettings = ({ attributes, setAttributes, handleInputChange, handleSugge
                 <TextControl
                   label={__("From", 'map-osm')}
                   value={fromLocation.locationName}
-                  onChange={handleFromLocationInput}
+                  onChange={(value) => handleSettingsInputChange(value, "from")}
                 />
-                <ToggleControl
-                  label="Get Your Location"
-                  checked={getYourLocation}
-                  help={__("You need to turn off this toggle to edit from location", "map-osm")}
-                  onChange={(newValue) => setAttributes({ mapOptions: updateData(mapOptions, newValue, 'getYourLocation') })}
-                />
-                <button className='search-btn' onClick={handleFromLocationSearch}>{__('SEARCH', 'map-osm')}</button>
+                <button className='search-btn' onClick={() => handleSearchBtnClick(fromLocation.locationName, "from")}>{__('SEARCH', 'map-osm')}</button>
                 {fromLocationSuggestions.length > 0 && (
                   <ul style={{ border: '1px solid #ccc', padding: '10px' }}>
                     {fromLocationSuggestions.map((suggestion, index) => (
-                      <li key={index} className='suggestion' onClick={() => handleFromLocationSuggestionClick(suggestion)}>
+                      <li key={index} className='suggestion' onClick={() => handleSuggestionClick(suggestion, "from")}>
                         <span><MarkerIcon /></span>
                         <p>{suggestion.display_name}</p>
                       </li>
                     ))}
                   </ul>
                 )}
+                <ToggleControl
+                  label="Get Your Location"
+                  checked={getYourLocation}
+                  help={__("You need to turn off this toggle to edit from location", "map-osm")}
+                  onChange={(newValue) => setAttributes({ mapOptions: updateData(mapOptions, newValue, 'getYourLocation') })}
+                />
               </div>
 
               <div style={{ display: "flex", justifyContent: "space-between", gap: "5px" }}>
@@ -99,13 +203,14 @@ const MapSettings = ({ attributes, setAttributes, handleInputChange, handleSugge
           <TextControl
             label={__(`${showDirectionFromYourLocation ? "Your Destination" : "Search Location"}`, 'map-osm')}
             value={searchQuery}
-            onChange={handleInputChange}
+            onChange={(value) => handleSettingsInputChange(value, "to")}
+            placeholder='Type Location Name'
           />
-          <button className='search-btn' onClick={handleSearch}>{__('SEARCH', 'map-osm')}</button>
-          {suggestions.length > 0 && (
+          <button className='search-btn' onClick={() => handleSearchBtnClick(searchQuery, "to")}>{__('SEARCH', 'map-osm')}</button>
+          {toLocationSuggestions.length > 0 && (
             <ul style={{ border: '1px solid #ccc', padding: '10px' }}>
-              {suggestions.map((suggestion, index) => (
-                <li key={index} className='suggestion' onClick={() => handleSuggestionClick(suggestion)}>
+              {toLocationSuggestions.map((suggestion, index) => (
+                <li key={index} className='suggestion' onClick={() => handleSuggestionClick(suggestion, "to")}>
                   <span><MarkerIcon /></span>
                   <p>{suggestion.display_name}</p>
                 </li>
@@ -127,12 +232,13 @@ const MapSettings = ({ attributes, setAttributes, handleInputChange, handleSugge
           />
         </div>
 
-        <ToggleControl
-          label="Show Direction From Your Location"
-          checked={showDirectionFromYourLocation}
-          onChange={(newValue) => setAttributes({ mapOptions: updateData(mapOptions, newValue, 'showDirectionFromYourLocation') })}
-        />
-
+        {
+          currentLocation.lat !== toLocation.lat && <ToggleControl
+            label="Show Direction From Your Location"
+            checked={showDirectionFromYourLocation}
+            onChange={(newValue) => setAttributes({ mapOptions: updateData(mapOptions, newValue, 'showDirectionFromYourLocation') }) }
+          />
+        }
 
         <ToggleControl
           label="Show Marker Text"
@@ -165,7 +271,7 @@ const MapSettings = ({ attributes, setAttributes, handleInputChange, handleSugge
         />
 
         <SelectControl
-          label="Select Controller Position"
+          label="FullScreen Zoom Controller Position"
           value={controlPosition}
           options={[
             { value: 'topleft', label: 'Top Left' },
@@ -174,6 +280,17 @@ const MapSettings = ({ attributes, setAttributes, handleInputChange, handleSugge
             { value: 'bottomright', label: 'Bottom Right' },
           ]}
           onChange={value => setAttributes({ mapOptions: updateData(mapOptions, value, "controlPosition") })}
+        />
+        <SelectControl
+          label="Get Location Controller Position"
+          value={getLocationControlPosition}
+          options={[
+            { value: 'topleft', label: 'Top Left' },
+            { value: 'topright', label: 'Top Right' },
+            { value: 'bottomleft', label: 'Bottom Left' },
+            { value: 'bottomright', label: 'Bottom Right' },
+          ]}
+          onChange={value => setAttributes({ mapOptions: updateData(mapOptions, value, "getLocationControlPosition") })}
         />
 
       </PanelBody>

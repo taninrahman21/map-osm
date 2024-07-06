@@ -1,4 +1,4 @@
-import { __experimentalBorderControl as BorderControl, PanelBody, PanelRow, __experimentalUnitControl as UnitControl } from '@wordpress/components';
+import { __experimentalBorderControl as BorderControl, PanelBody, PanelRow, RangeControl, __experimentalUnitControl as UnitControl } from '@wordpress/components';
 import { compose } from '@wordpress/compose';
 import { withSelect } from '@wordpress/data';
 import { __ } from '@wordpress/i18n';
@@ -8,9 +8,13 @@ import { Device } from '../../../../../Components/Device/Device';
 import { updateData } from '../../../utils/functions';
 
 const MapStyles = compose(withSelect((select) => { return { device: select("core/edit-post").__experimentalGetPreviewDeviceType()?.toLowerCase() } }))(({ attributes, setAttributes, device }) => {
-  const { markerIconColor, mapLayout, mapOptions } = attributes;
-  
+  const { mapLayout, osmStyles, mapOptions } = attributes;
+  const { showDirectionFromYourLocation } = mapOptions;
   const { height, width, border } = mapLayout;
+  const { markerIconSize, fromLocationMarkerColor, toLocationMarkerColor, defaultMarkerColor, routeLineColor, currentLocationMarkerColor } = osmStyles;
+
+
+  console.log(osmStyles);
 
 
   const colors = [
@@ -52,14 +56,9 @@ const MapStyles = compose(withSelect((select) => { return { device: select("core
           />
         </div>
 
-        {/* Marker Icon Color */}
-        <div>
-          <BColor
-            label={__('Marker Icon Color', 'feature-lists')}
-            value={markerIconColor}
-            onChange={value => setAttributes({ markerIconColor: updateData(markerIconColor, value) })}
-            defaultColor='orangered' />
-        </div>
+
+
+
 
         {/* Border Color */}
         <div>
@@ -71,6 +70,68 @@ const MapStyles = compose(withSelect((select) => { return { device: select("core
           />
         </div>
 
+      </PanelBody>
+
+      <PanelBody title={__("Marker Styles", "map-osm")}>
+        {/* Marker Size */}
+        <div>
+          <RangeControl
+            label={__('Marker Icon Size', 'map-osm')}
+            value={markerIconSize}
+            onChange={(value) => setAttributes({ osmStyles: updateData(osmStyles, value, "markerIconSize") })}
+            min={5}
+            max={100}
+          />
+        </div>
+
+        {/* Marker Icon Color */}
+        <div>
+          {
+            !showDirectionFromYourLocation && (
+              <BColor
+                label={__('Marker Icon Color', 'map-osm')}
+                value={defaultMarkerColor}
+                onChange={value => setAttributes({ osmStyles: updateData(osmStyles, value, "defaultMarkerColor") })}
+                defaultColor='orangered' />
+            )
+          }
+          {/* Current Location Marker Color */}
+          <BColor
+            label={__('Current Location Marker Color', 'map-osm')}
+            value={currentLocationMarkerColor}
+            onChange={value => setAttributes({ osmStyles: updateData(osmStyles, value, "currentLocationMarkerColor") })}
+            defaultColor='orangered' />
+
+          {
+            showDirectionFromYourLocation && (
+              <BColor
+                label={__('Start Point Marker Color', 'map-osm')}
+                value={fromLocationMarkerColor}
+                onChange={value => setAttributes({ osmStyles: updateData(osmStyles, value, "fromLocationMarkerColor") })}
+                defaultColor='orangered' />
+            )
+          }
+          {
+            showDirectionFromYourLocation && (
+              <BColor
+                label={__('End Point Marker Color', 'map-osm')}
+                value={toLocationMarkerColor}
+                onChange={value => setAttributes({ osmStyles: updateData(osmStyles, value, "toLocationMarkerColor") })}
+                defaultColor='orangered' />
+            )
+          }
+          {
+            showDirectionFromYourLocation && (
+              <BColor
+                label={__('Routing Line Color', 'map-osm')}
+                value={routeLineColor}
+                onChange={value => setAttributes({ osmStyles: updateData(osmStyles, value, "routeLineColor") })}
+                defaultColor='orangered' />
+            )
+          }
+        </div>
+
+        {/*  */}
       </PanelBody>
     </>
   );

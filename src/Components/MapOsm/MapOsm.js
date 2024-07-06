@@ -13,14 +13,13 @@ import 'leaflet/dist/leaflet.css';
 import React, { useEffect, useRef, useState } from 'react';
 import '../../editor.scss';
 import { updateData } from '../../utils/functions';
-import { MarkerIcon } from '../../utils/icons';
 import Styles from '../Common/Styles';
 
 const MapOsm = compose(withSelect((select) => { return { device: select("core/edit-post").__experimentalGetPreviewDeviceType()?.toLowerCase() } }))(({ attributes, setAttributes, device }) => {
   const { cId, mapOptions, mapOsm, osmStyles } = attributes;
-  const { latitude, longitude, markerText, zoom, mapLayer, searchQuery, fromLocation, toLocation } = mapOsm;
-  const { controlPosition, showPrintButton, showMarkerText, showDirectionFromYourLocation, getYourLocation } = mapOptions;
-  const { markerIconColor } = osmStyles;
+  const { latitude, longitude, markerText, zoom, mapLayer, searchQuery, fromLocation, currentLocation, toLocation } = mapOsm;
+  const { controlPosition, showPrintButton, showMarkerText, showDirectionFromYourLocation, getYourLocation, getLocationControlPosition } = mapOptions;
+  const { routeLineColor, toLocationMarkerColor, defaultMarkerColor, fromLocationMarkerColor, currentLocationMarkerColor, markerIconSize } = osmStyles;
   const mapRef = useRef(null);
   const mapContainerRef = useRef(null);
 
@@ -37,6 +36,7 @@ const MapOsm = compose(withSelect((select) => { return { device: select("core/ed
     });
   }
 
+
   const layersWithImg = [
     { name: "standard", img: "https://maps.gstatic.com/tactile/layerswitcher/ic_default_colors2-1x.png" },
     { name: "satellite", img: "https://maps.gstatic.com/tactile/layerswitcher/ic_satellite-1x.png" },
@@ -46,23 +46,19 @@ const MapOsm = compose(withSelect((select) => { return { device: select("core/ed
   const activeLayer = layersWithImg.find(layer => layer.name === mapLayer);
   const activeLayerImg = activeLayer.img;
 
-  const getMarkerIconUrl = (color) => {
-    const encodedColor = encodeURIComponent(color);
-    return `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 384 512'%3E%3Cpath fill='${encodedColor}' d='M215.7 499.2C267 435 384 279.4 384 192C384 86 298 0 192 0S0 86 0 192c0 87.4 117 243 168.3 307.2c12.3 15.3 35.1 15.3 47.4 0zM192 128a64 64 0 1 1 0 128 64 64 0 1 1 0-128z'/%3E%3C/svg%3E`;
-  };
 
-  const createCustomIcon = (color) => {
-    const markerIconUrl = getMarkerIconUrl(color);
-    return L.icon({
-      iconUrl: markerIconUrl,
-      iconSize: [32, 32],
-      iconAnchor: [16, 32],
-      popupAnchor: [0, -32],
-      className: "custom-marker-icon"
-    });
-  };
+  const getCurrentLocationIcon = (iconContent, iconColor) => {
+    let iconOptions = {
+      iconSize: [markerIconSize, markerIconSize],
+      iconAnchor: [12, 41],
+      popupAnchor: [1, -34],
+      shadowSize: [41, 41]
+    };
+    const iconUrlEncoded = 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(iconContent);
+    iconOptions.iconUrl = iconUrlEncoded;
+    return L.icon(iconOptions);
+  }
 
-  console.log(fromLocation);
 
   useEffect(() => {
     if (!mapContainerRef.current) {
@@ -74,8 +70,15 @@ const MapOsm = compose(withSelect((select) => { return { device: select("core/ed
       mapRef.current.remove();
     }
 
-    const map = L.map(mapContainerRef.current, { fullscreenControl: true, fullscreenControlOptions: { position: controlPosition } }).setView([latitude, longitude], zoom);
+    const map = L.map(mapContainerRef.current, { fullscreenControl: true, fullscreenControlOptions: { position: controlPosition } });
     mapRef.current = map;
+
+
+    if (toLocation.lat && toLocation.lon || latitude && longitude) {
+      map.setView([latitude, longitude], zoom);
+    } else {
+      map.setView([fromLocation.lat, fromLocation.lon], zoom);
+    }
 
 
     // Define different base layers
@@ -130,7 +133,6 @@ const MapOsm = compose(withSelect((select) => { return { device: select("core/ed
       </div>
     `;
 
-
         const layersContainer = div.querySelector('.layers-wrapper');
 
         layersContainer.addEventListener('click', (event) => {
@@ -145,13 +147,58 @@ const MapOsm = compose(withSelect((select) => { return { device: select("core/ed
         return div;
       }
     });
-
     // Add the custom Layers Control to the map
     map.addControl(new CustomLayersControl({ position: 'bottomleft' }));
 
-    const customIcon = createCustomIcon(markerIconColor);
 
-    const marker = L.marker([latitude, longitude], { icon: customIcon }).addTo(map);
+    const GetCurrentLocationControl = L.Control.extend({
+      onAdd: () => {
+        const div = L.DomUtil.create('div', 'get-current-location-control');
+        div.innerHTML = `
+      <div title="Your Location" class="location-control-wrapper">
+        <span>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M256 0c17.7 0 32 14.3 32 32V66.7C368.4 80.1 431.9 143.6 445.3 224H480c17.7 0 32 14.3 32 32s-14.3 32-32 32H445.3C431.9 368.4 368.4 431.9 288 445.3V480c0 17.7-14.3 32-32 32s-32-14.3-32-32V445.3C143.6 431.9 80.1 368.4 66.7 288H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H66.7C80.1 143.6 143.6 80.1 224 66.7V32c0-17.7 14.3-32 32-32zM128 256a128 128 0 1 0 256 0 128 128 0 1 0 -256 0zm128-80a80 80 0 1 1 0 160 80 80 0 1 1 0-160z"/></svg>
+        </span>
+      </div>
+    `;
+
+        const getLocationContainer = div.querySelector('.location-control-wrapper');
+
+        getLocationContainer.addEventListener('click', () => {
+          setAttributes({
+            mapOsm: produce(mapOsm, draft => {
+              draft.currentLocation.showedCurrentLocation = true;
+            })
+          });
+          let iconColor = currentLocationMarkerColor;
+          let iconContent = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M320 64A64 64 0 1 0 192 64a64 64 0 1 0 128 0zm-96 96c-35.3 0-64 28.7-64 64v48c0 17.7 14.3 32 32 32h1.8l11.1 99.5c1.8 16.2 15.5 28.5 31.8 28.5h38.7c16.3 0 30-12.3 31.8-28.5L318.2 304H320c17.7 0 32-14.3 32-32V224c0-35.3-28.7-64-64-64H224zM132.3 394.2c13-2.4 21.7-14.9 19.3-27.9s-14.9-21.7-27.9-19.3c-32.4 5.9-60.9 14.2-82 24.8c-10.5 5.3-20.3 11.7-27.8 19.6C6.4 399.5 0 410.5 0 424c0 21.4 15.5 36.1 29.1 45c14.7 9.6 34.3 17.3 56.4 23.4C130.2 504.7 190.4 512 256 512s125.8-7.3 170.4-19.6c22.1-6.1 41.8-13.8 56.4-23.4c13.7-8.9 29.1-23.6 29.1-45c0-13.5-6.4-24.5-14-32.6c-7.5-7.9-17.3-14.3-27.8-19.6c-21-10.6-49.5-18.9-82-24.8c-13-2.4-25.5 6.3-27.9 19.3s6.3 25.5 19.3 27.9c30.2 5.5 53.7 12.8 69 20.5c3.2 1.6 5.8 3.1 7.9 4.5c3.6 2.4 3.6 7.2 0 9.6c-8.8 5.7-23.1 11.8-43 17.3C374.3 457 318.5 464 256 464s-118.3-7-157.7-17.9c-19.9-5.5-34.2-11.6-43-17.3c-3.6-2.4-3.6-7.2 0-9.6c2.1-1.4 4.8-2.9 7.9-4.5c15.3-7.7 38.8-14.9 69-20.5z" fill="' + iconColor + '"/></svg>';
+          map.setView([currentLocation.lat, currentLocation.lon], 18);
+          L.marker([currentLocation?.lat, currentLocation?.lon], { icon: getCurrentLocationIcon(iconContent, iconColor) }).bindPopup('Your are here :)').addTo(map).openPopup();
+        })
+
+        return div;
+      }
+    });
+    // Add the Get Current Location Control to the map
+    map.addControl(new GetCurrentLocationControl({ position: getLocationControlPosition }));
+
+
+
+    let iconColor = defaultMarkerColor;
+    let iconContent = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><path d="M215.7 499.2C267 435 384 279.4 384 192C384 86 298 0 192 0S0 86 0 192c0 87.4 117 243 168.3 307.2c12.3 15.3 35.1 15.3 47.4 0zM192 128a64 64 0 1 1 0 128 64 64 0 1 1 0-128z" fill="' + iconColor + '"/></svg>';
+
+    const marker = L.marker([latitude, longitude], { icon: getCurrentLocationIcon(iconContent, iconColor) });
+
+    if (latitude && longitude && !showDirectionFromYourLocation) {
+      marker.addTo(map);
+    }
+
+    if (currentLocation.showedCurrentLocation) {
+      let iconColor = currentLocationMarkerColor;
+      let iconContent = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M320 64A64 64 0 1 0 192 64a64 64 0 1 0 128 0zm-96 96c-35.3 0-64 28.7-64 64v48c0 17.7 14.3 32 32 32h1.8l11.1 99.5c1.8 16.2 15.5 28.5 31.8 28.5h38.7c16.3 0 30-12.3 31.8-28.5L318.2 304H320c17.7 0 32-14.3 32-32V224c0-35.3-28.7-64-64-64H224zM132.3 394.2c13-2.4 21.7-14.9 19.3-27.9s-14.9-21.7-27.9-19.3c-32.4 5.9-60.9 14.2-82 24.8c-10.5 5.3-20.3 11.7-27.8 19.6C6.4 399.5 0 410.5 0 424c0 21.4 15.5 36.1 29.1 45c14.7 9.6 34.3 17.3 56.4 23.4C130.2 504.7 190.4 512 256 512s125.8-7.3 170.4-19.6c22.1-6.1 41.8-13.8 56.4-23.4c13.7-8.9 29.1-23.6 29.1-45c0-13.5-6.4-24.5-14-32.6c-7.5-7.9-17.3-14.3-27.8-19.6c-21-10.6-49.5-18.9-82-24.8c-13-2.4-25.5 6.3-27.9 19.3s6.3 25.5 19.3 27.9c30.2 5.5 53.7 12.8 69 20.5c3.2 1.6 5.8 3.1 7.9 4.5c3.6 2.4 3.6 7.2 0 9.6c-8.8 5.7-23.1 11.8-43 17.3C374.3 457 318.5 464 256 464s-118.3-7-157.7-17.9c-19.9-5.5-34.2-11.6-43-17.3c-3.6-2.4-3.6-7.2 0-9.6c2.1-1.4 4.8-2.9 7.9-4.5c15.3-7.7 38.8-14.9 69-20.5z" fill="' + iconColor + '"/></svg>';
+      L.marker([currentLocation?.lat, currentLocation?.lon], { icon: getCurrentLocationIcon(iconContent, iconColor) }).bindPopup('Your are here :)').addTo(map).openPopup();
+    }
+
 
     if (showMarkerText) {
       marker.bindPopup(`<b>${markerText}</b>`).openPopup();
@@ -173,8 +220,8 @@ const MapOsm = compose(withSelect((select) => { return { device: select("core/ed
           name: fromLocation.locationName
         },
         {
-          latLng: L.latLng(latitude, longitude),
-          name: searchQuery
+          latLng: L.latLng(toLocation.lat, toLocation.lon),
+          name: toLocation.locationName
         }
       ];
 
@@ -182,40 +229,65 @@ const MapOsm = compose(withSelect((select) => { return { device: select("core/ed
         waypoints,
         lineOptions: {
           styles: [ // M
-            { color: 'Orangered', opacity: 0.6, weight: 10 }
+            { color: routeLineColor, opacity: 0.6, weight: 10 }
           ]
         },
         createMarker: (i, waypoint, n) => {
-          const iconColor = i === 0 ? 'green' : (i === n - 1 ? 'red' : 'blue');
-          const customRoutingIcon = createCustomIcon(iconColor);
+          let iconColor;
+          let iconContent;
+
+          if (i === 0) {
+            iconColor = fromLocationMarkerColor;
+            if (fromLocation.lat === currentLocation.lat && fromLocation.lon === currentLocation.lon) {
+              iconContent = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M320 64A64 64 0 1 0 192 64a64 64 0 1 0 128 0zm-96 96c-35.3 0-64 28.7-64 64v48c0 17.7 14.3 32 32 32h1.8l11.1 99.5c1.8 16.2 15.5 28.5 31.8 28.5h38.7c16.3 0 30-12.3 31.8-28.5L318.2 304H320c17.7 0 32-14.3 32-32V224c0-35.3-28.7-64-64-64H224zM132.3 394.2c13-2.4 21.7-14.9 19.3-27.9s-14.9-21.7-27.9-19.3c-32.4 5.9-60.9 14.2-82 24.8c-10.5 5.3-20.3 11.7-27.8 19.6C6.4 399.5 0 410.5 0 424c0 21.4 15.5 36.1 29.1 45c14.7 9.6 34.3 17.3 56.4 23.4C130.2 504.7 190.4 512 256 512s125.8-7.3 170.4-19.6c22.1-6.1 41.8-13.8 56.4-23.4c13.7-8.9 29.1-23.6 29.1-45c0-13.5-6.4-24.5-14-32.6c-7.5-7.9-17.3-14.3-27.8-19.6c-21-10.6-49.5-18.9-82-24.8c-13-2.4-25.5 6.3-27.9 19.3s6.3 25.5 19.3 27.9c30.2 5.5 53.7 12.8 69 20.5c3.2 1.6 5.8 3.1 7.9 4.5c3.6 2.4 3.6 7.2 0 9.6c-8.8 5.7-23.1 11.8-43 17.3C374.3 457 318.5 464 256 464s-118.3-7-157.7-17.9c-19.9-5.5-34.2-11.6-43-17.3c-3.6-2.4-3.6-7.2 0-9.6c2.1-1.4 4.8-2.9 7.9-4.5c15.3-7.7 38.8-14.9 69-20.5z" fill="' + iconColor + '"/></svg>';
+            } else {
+              iconContent = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><path d="M215.7 499.2C267 435 384 279.4 384 192C384 86 298 0 192 0S0 86 0 192c0 87.4 117 243 168.3 307.2c12.3 15.3 35.1 15.3 47.4 0zM192 128a64 64 0 1 1 0 128 64 64 0 1 1 0-128z" fill="' + iconColor + '"/></svg>';
+            }
+
+          } else if (i === n - 1) {
+            iconColor = toLocationMarkerColor;
+            iconContent = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><path d="M215.7 499.2C267 435 384 279.4 384 192C384 86 298 0 192 0S0 86 0 192c0 87.4 117 243 168.3 307.2c12.3 15.3 35.1 15.3 47.4 0zM192 128a64 64 0 1 1 0 128 64 64 0 1 1 0-128z" fill="' + iconColor + '"/></svg>';
+          } else {
+            iconColor = 'blue';
+            iconContent = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><path d="M215.7 499.2C267 435 384 279.4 384 192C384 86 298 0 192 0S0 86 0 192c0 87.4 117 243 168.3 307.2c12.3 15.3 35.1 15.3 47.4 0zM192 128a64 64 0 1 1 0 128 64 64 0 1 1 0-128z" fill="' + iconColor + '"/></svg>';
+          }
+          const customRoutingIcon = getCurrentLocationIcon(iconContent, iconColor);
           const marker = L.marker(waypoint.latLng, {
             icon: customRoutingIcon
           });
-          marker.bindPopup(waypoint.name); // Bind popup with waypoint name
+          marker.bindPopup(waypoint.name);
           return marker;
         }
       }).addTo(map);
     }
 
 
+    let clickCounter = 0;
+
     // Map Click Option
     map.on('click', function (e) {
+      clickCounter++;
       const { lat, lng } = e.latlng;
 
-
-      fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&zoom=${zoom}`)
-        .then(response => response.json())
-        .then(data => {
-          if (data && data.display_name) {
-            L.popup()
-              .setLatLng(e.latlng)
-              .setContent(`
+      if (clickCounter === 2) {
+        fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&zoom=${zoom}`)
+          .then(response => response.json())
+          .then(data => {
+            if (data && data.display_name) {
+              L.popup()
+                .setLatLng(e.latlng)
+                .setContent(`
                    ${data.display_name}<br>
                   <b>Latitude:</b> ${lat}<br>
                   <b>Longitude:</b> ${lng}
               `).openOn(map);
-          }
-        });
+            }
+          });
+      }
+
+      if (clickCounter === 2) {
+        clickCounter = 0;
+      }
     });
 
 
@@ -241,9 +313,10 @@ const MapOsm = compose(withSelect((select) => { return { device: select("core/ed
         mapRef.current = null;
       }
     };
-  }, [osmStyles, device, mapOsm, mapOptions]);
+  }, [fromLocationMarkerColor, toLocationMarkerColor, currentLocationMarkerColor, defaultMarkerColor, markerIconSize, currentLocation, device, markerText, searchQuery, zoom, latitude, longitude, fromLocation, mapOptions, mapLayer, routeLineColor]);
 
 
+  // Get Current Location
   useEffect(() => {
     if (!fromLocation.lat || !fromLocation.lon) {
       navigator.geolocation.getCurrentPosition((position) => {
@@ -258,9 +331,15 @@ const MapOsm = compose(withSelect((select) => { return { device: select("core/ed
               });
               setAttributes({
                 mapOsm: produce(mapOsm, draft => {
+                  // draft.latitude = position.coords.latitude;
+                  // draft.longitude = position.coords.longitude;
                   draft.fromLocation.lat = position.coords.latitude;
                   draft.fromLocation.lon = position.coords.longitude;
+                  draft.currentLocation.lat = position.coords.latitude;
+                  draft.currentLocation.lon = position.coords.longitude;
+                  draft.currentLocation.popPupText = "You are here :)";
                   draft.fromLocation.locationName = data.display_name;
+                  // draft.markerText = "Your Location";
                 })
               });
             }
@@ -269,7 +348,7 @@ const MapOsm = compose(withSelect((select) => { return { device: select("core/ed
         console.error('Error fetching current location:', error);
       });
     }
-  }, [fromLocation.lat, fromLocation.lon, fromLocation.locationName, setAttributes, mapOsm, zoom]);
+  }, [fromLocation.lat, fromLocation.lon, fromLocation.locationName, setAttributes, zoom]);
 
   // Function to export the map as an image
   const exportAsImage = () => {
@@ -318,38 +397,35 @@ const MapOsm = compose(withSelect((select) => { return { device: select("core/ed
     });
   };
 
-
-
   return (
     <>
       <Styles attributes={attributes} />
 
-      <div id={`mainWrapper-${cId}`}>
-        <div ref={mapContainerRef} style={{ position: "relative" }} id="map">
-          <div className='from-to-location-div'>
-            <div className='from-input' >
-              <MarkerIcon />
-              <input
-                type="text"
-                placeholder="From"
-                value={fromLocation.locationName}
-                onChange={handleFromLocationChange}
-              />
-            </div>
-            <div className='destination-input'>
-              <MarkerIcon />
-              <input
-                type="text"
-                placeholder="Destination"
-                value={toLocation.locationName}
-                onChange={handleToLocationChange}
-              />
-            </div>
+      <div id={`mainWrapper-${cId}`} style={{ position: "relative" }}>
+        <div ref={mapContainerRef} id="map"></div>
+        {/* <div className='from-to-location-div'>
+          <div className='from-input' >
+            <MarkerIcon />
+            <input
+              type="text"
+              placeholder="From"
+              value={fromLocation.locationName}
+              onChange={(e) => backendInputChange(e.target.value, "from")}
+            />
           </div>
-        </div>
+          <div className='destination-input'>
+            <MarkerIcon />
+            <input
+              type="text"
+              placeholder="Destination"
+              value={toLocation.locationName}
+              onChange={(e) => backendInputChange(e.target.value, "to")}
+            />
+          </div>
+        </div> */}
+        <button className='img-download-btn' onClick={exportAsImage}>{__('Export as Image', 'map-osm')}</button>
+        <button className='pdf-download-btn' onClick={exportAsPdf}>{__('Export as PDF', 'map-osm')}</button>
       </div>
-      <button className='img-download-btn' onClick={exportAsImage}>{__('Export as Image', 'map-osm')}</button>
-      <button className='pdf-download-btn' onClick={exportAsPdf}>{__('Export as PDF', 'map-osm')}</button>
     </>
   );
 });

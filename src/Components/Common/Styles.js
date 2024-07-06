@@ -7,7 +7,7 @@ const Styles = ({ attributes }) => {
 
   const mainContainer = `#mainWrapper-${cId}`;
   const map = `${mainContainer} #map`;
-  const fromToLocationDiv = `${map} .from-to-location-div`;
+  const fromToLocationDiv = `${mainContainer} .from-to-location-div`;
   const imgBtn = `${mainContainer} .img-download-btn`;
   const pdfBtn = `${mainContainer} .pdf-download-btn`;
 
@@ -29,7 +29,7 @@ const Styles = ({ attributes }) => {
             display: ${showPdfDownload ? 'inline-block' : 'none'};
           }
           ${fromToLocationDiv} {
-           display: ${allowUsersToSetFromToLocation? 'flex' : 'none'};
+           display: ${allowUsersToSetFromToLocation ? 'flex' : 'none'};
           }
 
           @media only screen and (min-width:641px) and (max-width: 1024px){

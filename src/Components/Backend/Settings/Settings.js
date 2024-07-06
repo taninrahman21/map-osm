@@ -5,7 +5,7 @@ import '../../../editor.scss';
 import MapSettings from './MapSettings';
 import MapStyles from './MapStyles';
 
-const Settings = ({ attributes, setAttributes, handleInputChange, handleSuggestionClick, handleSearch, suggestions, handleFromLocationSearch, handleFromLocationSuggestionClick, handleFromLocationInput, fromLocationSuggestions }) => {
+const Settings = ({ attributes, setAttributes }) => {
 
   return (
     <>
@@ -27,7 +27,7 @@ const Settings = ({ attributes, setAttributes, handleInputChange, handleSuggesti
           ]}>
           {(tab) => (
             <>
-              {tab.name === 'tab1' && <MapSettings attributes={attributes} setAttributes={setAttributes} handleSearch={handleSearch} handleInputChange={handleInputChange} handleSuggestionClick={handleSuggestionClick} suggestions={suggestions} handleFromLocationInput={handleFromLocationInput} handleFromLocationSuggestionClick={handleFromLocationSuggestionClick} handleFromLocationSearch={handleFromLocationSearch} fromLocationSuggestions={fromLocationSuggestions} />}
+              {tab.name === 'tab1' && <MapSettings attributes={attributes} setAttributes={setAttributes} />}
               {tab.name === 'tab2' && <MapStyles attributes={attributes} setAttributes={setAttributes} />}
             </>
           )}
