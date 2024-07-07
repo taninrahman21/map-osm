@@ -80,6 +80,7 @@ const MapSettings = ({ attributes, setAttributes }) => {
           draft.toLocation.lat = parseFloat(place.lat);
           draft.toLocation.lon = parseFloat(place.lon);
           draft.toLocation.locationName = searchQuery;
+          draft.currentLocation.showedCurrentLocation = false;
         })
       });
       setToLocationSuggestions([]);
@@ -107,6 +108,7 @@ const MapSettings = ({ attributes, setAttributes }) => {
           draft.toLocation.locationName = suggestion.display_name;
           draft.searchQuery = suggestion.display_name;
           draft.markerText = suggestion.display_name;
+          draft.currentLocation.showedCurrentLocation = false;
         })
       });
       setToLocationSuggestions([]);
@@ -117,7 +119,21 @@ const MapSettings = ({ attributes, setAttributes }) => {
   const validateLatitude = (value) => {
     const lat = parseFloat(value);
     if (lat >= -90 && lat <= 90) {
-      setAttributes({ mapOsm: updateData(mapOsm, lat, "latitude") });
+      fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${longitude}`)
+        .then(res => res.json())
+        .then(data => {
+          if (data) {
+            setAttributes({
+              mapOsm: produce(mapOsm, draft => {
+                draft.latitude = lat;
+                draft.toLocation.lat = lat;
+                draft.searchQuery = data.display_name;
+                draft.toLocation.locationName = data.display_name;
+                draft.currentLocation.showedCurrentLocation = false;
+              })
+            })
+          }
+        })
     } else {
       alert(__('Please enter a valid latitude between -90 and 90.', 'map-osm'));
     }
@@ -126,7 +142,21 @@ const MapSettings = ({ attributes, setAttributes }) => {
   const validateLongitude = (value) => {
     const lon = parseFloat(value);
     if (lon >= -180 && lon <= 180) {
-      setAttributes({ mapOsm: updateData(mapOsm, lon, "longitude") });
+      fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${lon}`)
+        .then(res => res.json())
+        .then(data => {
+          if (data) {
+            setAttributes({
+              mapOsm: produce(mapOsm, draft => {
+                draft.longitude = lon;
+                draft.toLocation.lon = lon;
+                draft.searchQuery = data.display_name;
+                draft.toLocation.locationName = data.display_name;
+                draft.currentLocation.showedCurrentLocation = false;
+              })
+            })
+          }
+        })
     } else {
       alert(__('Please enter a valid longitude between -180 and 180.', 'map-osm'));
     }
@@ -135,7 +165,19 @@ const MapSettings = ({ attributes, setAttributes }) => {
   const validateFromLat = (value) => {
     const lat = parseFloat(value);
     if (lat >= -90 && lat <= 90) {
-      setAttributes({ mapOsm: updateData(mapOsm, lat, "fromLocation", "lat") });
+      fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${fromLocation.lon}`)
+        .then(res => res.json())
+        .then(data => {
+          if (data) {
+            setAttributes({
+              mapOsm: produce(mapOsm, draft => {
+                draft.fromLocation.lat = lat;
+                draft.fromLocation.locationName = data.display_name;
+                draft.currentLocation.showedCurrentLocation = false;
+              })
+            })
+          }
+        })
     } else {
       alert(__('Please enter a valid latitude between -90 and 90.', 'map-osm'));
     }
@@ -144,7 +186,19 @@ const MapSettings = ({ attributes, setAttributes }) => {
   const validateFromLon = (value) => {
     const lon = parseFloat(value);
     if (lon >= -180 && lon <= 180) {
-      setAttributes({ mapOsm: updateData(mapOsm, lon, "fromLocation", "lon") });
+      fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${fromLocation.lat}&lon=${lon}`)
+        .then(res => res.json())
+        .then(data => {
+          if (data) {
+            setAttributes({
+              mapOsm: produce(mapOsm, draft => {
+                draft.fromLocation.lon = lon;
+                draft.fromLocation.locationName = data.display_name;
+                draft.currentLocation.showedCurrentLocation = false;
+              })
+            })
+          }
+        })
     } else {
       alert(__('Please enter a valid longitude between -180 and 180.', 'map-osm'));
     }
@@ -224,11 +278,13 @@ const MapSettings = ({ attributes, setAttributes }) => {
             label={__('Latitude', 'map-osm')}
             value={latitude}
             onChange={validateLatitude}
+            placeholder='Type Valid Latitude'
           />
           <TextControl
             label={__('Longitude', 'map-osm')}
             value={longitude}
             onChange={validateLongitude}
+            placeholder='Type Valid Longitude'
           />
         </div>
 
@@ -236,7 +292,7 @@ const MapSettings = ({ attributes, setAttributes }) => {
           currentLocation.lat !== toLocation.lat && <ToggleControl
             label="Show Direction From Your Location"
             checked={showDirectionFromYourLocation}
-            onChange={(newValue) => setAttributes({ mapOptions: updateData(mapOptions, newValue, 'showDirectionFromYourLocation') }) }
+            onChange={(newValue) => setAttributes({ mapOptions: updateData(mapOptions, newValue, 'showDirectionFromYourLocation') })}
           />
         }
 
