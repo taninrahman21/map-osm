@@ -68,6 +68,7 @@ const MapSettings = ({ attributes, setAttributes }) => {
       setAttributes({
         mapOsm: produce(mapOsm, draft => {
           draft.fromLocation.lat = parseFloat(place.lat);
+          draft.zoom = 17;
           draft.fromLocation.lon = parseFloat(place.lon);
         })
       });
@@ -80,6 +81,7 @@ const MapSettings = ({ attributes, setAttributes }) => {
           draft.toLocation.lat = parseFloat(place.lat);
           draft.toLocation.lon = parseFloat(place.lon);
           draft.toLocation.locationName = searchQuery;
+          draft.zoom = 18;
           draft.currentLocation.showedCurrentLocation = false;
         })
       });
@@ -94,6 +96,7 @@ const MapSettings = ({ attributes, setAttributes }) => {
         mapOsm: produce(mapOsm, draft => {
           draft.fromLocation.lat = parseFloat(suggestion.lat);
           draft.fromLocation.lon = parseFloat(suggestion.lon);
+          draft.zoom = 17;
           draft.fromLocation.locationName = suggestion.display_name;
         })
       });
@@ -108,6 +111,7 @@ const MapSettings = ({ attributes, setAttributes }) => {
           draft.toLocation.locationName = suggestion.display_name;
           draft.searchQuery = suggestion.display_name;
           draft.markerText = suggestion.display_name;
+          draft.zoom = 17;
           draft.currentLocation.showedCurrentLocation = false;
         })
       });
@@ -150,6 +154,7 @@ const MapSettings = ({ attributes, setAttributes }) => {
               mapOsm: produce(mapOsm, draft => {
                 draft.longitude = lon;
                 draft.toLocation.lon = lon;
+                draft.zoom = 17;
                 draft.searchQuery = data.display_name;
                 draft.toLocation.locationName = data.display_name;
                 draft.currentLocation.showedCurrentLocation = false;
@@ -193,6 +198,7 @@ const MapSettings = ({ attributes, setAttributes }) => {
             setAttributes({
               mapOsm: produce(mapOsm, draft => {
                 draft.fromLocation.lon = lon;
+                draft.zoom = 17;
                 draft.fromLocation.locationName = data.display_name;
                 draft.currentLocation.showedCurrentLocation = false;
               })
@@ -289,8 +295,8 @@ const MapSettings = ({ attributes, setAttributes }) => {
         </div>
 
         {
-          currentLocation.lat !== toLocation.lat && <ToggleControl
-            label="Show Direction From Your Location"
+          fromLocation.lat !== toLocation.lat && toLocation.lat !== null && <ToggleControl
+            label="Show Route Direction"
             checked={showDirectionFromYourLocation}
             onChange={(newValue) => setAttributes({ mapOptions: updateData(mapOptions, newValue, 'showDirectionFromYourLocation') })}
           />

@@ -44,7 +44,7 @@
       "default": {
         "latitude": null,
         "longitude": null,
-        "zoom": 18,
+        "zoom": 13,
         "searchQuery": "",
         "markerText": "",
         "mapLayer": "standard",
