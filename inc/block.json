@@ -48,7 +48,12 @@
         "searchQuery": "",
         "markerText": "",
         "mapLayer": "standard",
-        "currentLocation": {"lat": null, "lon": null, "popUpText": "", "showedCurrentLocation": false},
+        "currentLocation": {
+          "lat": null,
+          "lon": null,
+          "popUpText": "",
+          "showedCurrentLocation": false
+        },
         "fromLocation": { "lat": 0, "lon": 0, "locationName": "" },
         "toLocation": { "lat": 0, "lon": 0, "locationName": "" },
         "fromSuggestions": [],
@@ -67,8 +72,8 @@
         "allowUsersToSetFromToLocation": false,
         "setSearchLocationOnDblClick": false,
         "showLocationDetailsOnClick": false,
-        "printBtnPosition": "topright",
-        "controlPosition": "topleft",
+        "printBtnPosition": "bottomright",
+        "controlPosition": "bottomright",
         "getLocationControlPosition": "bottomright"
       }
     },

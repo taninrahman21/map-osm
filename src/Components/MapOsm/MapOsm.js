@@ -38,9 +38,9 @@ const MapOsm = compose(withSelect((select) => { return { device: select("core/ed
 
 
   const layersWithImg = [
-    { name: "standard", img: "https://maps.gstatic.com/tactile/layerswitcher/ic_default_colors2-1x.png" },
-    { name: "satellite", img: "https://maps.gstatic.com/tactile/layerswitcher/ic_satellite-1x.png" },
-    { name: "terrain", img: "https://maps.gstatic.com/tactile/layerswitcher/ic_terrain-1x.png" }
+    { name: "standard", img: "https://i.ibb.co/p44DDCX/standard.png" },
+    { name: "satellite", img: "https://i.ibb.co/7bZP4z8/3d-illustration-city-urban-new-delhi-india-259146-3657.jpg" },
+    { name: "terrain", img: "https://i.ibb.co/ftxLqcs/terrain.png" }
   ];
 
   const activeLayer = layersWithImg.find(layer => layer.name === mapLayer);
@@ -121,15 +121,15 @@ const MapOsm = compose(withSelect((select) => { return { device: select("core/ed
         </div>
         <div class="layer-options">
           <div class="layer-option" data-layer="standard">
-            <img src="https://maps.gstatic.com/tactile/layerswitcher/ic_default_colors2-1x.png" alt="" />
+            <img src="https://i.ibb.co/p44DDCX/standard.png" alt="" />
             <span>Standard</span>
           </div>
           <div class="layer-option" data-layer="satellite">
-             <img src="https://maps.gstatic.com/tactile/layerswitcher/ic_satellite-1x.png" alt="" />
+             <img src="https://i.ibb.co/7bZP4z8/3d-illustration-city-urban-new-delhi-india-259146-3657.jpg" alt="" />
              <span>Satellite</span>
           </div>
           <div class="layer-option" data-layer="terrain">
-            <img src="https://maps.gstatic.com/tactile/layerswitcher/ic_terrain-1x.png" alt="" />
+            <img src="https://i.ibb.co/ftxLqcs/terrain.png" alt="" />
             <span>Terrain</span>
           </div>
         </div>
@@ -375,6 +375,7 @@ const MapOsm = compose(withSelect((select) => { return { device: select("core/ed
     }
   }, [fromLocation.lat, fromLocation.lon, fromLocation.locationName, setAttributes, zoom]);
 
+
   // Function to export the map as an image
   const exportAsImage = () => {
     toPng(document.getElementById('map'))
@@ -388,9 +389,9 @@ const MapOsm = compose(withSelect((select) => { return { device: select("core/ed
       })
       .catch((error) => {
         console.error('Failed to export map as image:', error);
+        alert(`Failed to export map as image: ${error.message}`);
       });
   };
-
   // Function to export the map as a PDF
   const exportAsPdf = () => {
     toPng(document.getElementById('map'))
@@ -404,23 +405,6 @@ const MapOsm = compose(withSelect((select) => { return { device: select("core/ed
       });
   };
 
-  const handleFromLocationChange = (e) => {
-    const locationName = e.target.value;
-    setAttributes({
-      mapOsm: produce(mapOsm, draft => {
-        draft.fromLocation.locationName = locationName;
-      })
-    });
-  };
-
-  const handleToLocationChange = (e) => {
-    const locationName = e.target.value;
-    setAttributes({
-      mapOsm: produce(mapOsm, draft => {
-        draft.toLocation.locationName = locationName;
-      })
-    });
-  };
 
   return (
     <>

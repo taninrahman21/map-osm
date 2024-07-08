@@ -234,12 +234,15 @@ const MapSettings = ({ attributes, setAttributes }) => {
                     ))}
                   </ul>
                 )}
-                <ToggleControl
-                  label="Get Your Location"
-                  checked={getYourLocation}
-                  help={__("You need to turn off this toggle to edit from location", "map-osm")}
-                  onChange={(newValue) => setAttributes({ mapOptions: updateData(mapOptions, newValue, 'getYourLocation') })}
-                />
+                {
+                  (fromLocation.lat !== currentLocation.lat && fromLocation.lon !== currentLocation.lon) && <ToggleControl
+                    label="Get Your Location"
+                    checked={getYourLocation}
+                    help={__("You need to turn off this toggle to edit from location", "map-osm")}
+                    onChange={(newValue) => setAttributes({ mapOptions: updateData(mapOptions, newValue, 'getYourLocation') })}
+                  />
+                }
+
               </div>
 
               <div style={{ display: "flex", justifyContent: "space-between", gap: "5px" }}>
@@ -295,11 +298,13 @@ const MapSettings = ({ attributes, setAttributes }) => {
         </div>
 
         {
-          fromLocation.lat !== toLocation.lat && toLocation.lat !== null && <ToggleControl
-            label="Show Route Direction"
-            checked={showDirectionFromYourLocation}
-            onChange={(newValue) => setAttributes({ mapOptions: updateData(mapOptions, newValue, 'showDirectionFromYourLocation') })}
-          />
+          (fromLocation.lat !== toLocation.lat && toLocation.lat !== 0) && (
+            <ToggleControl
+              label="Show Route Direction"
+              checked={showDirectionFromYourLocation}
+              onChange={(newValue) => setAttributes({ mapOptions: updateData(mapOptions, newValue, 'showDirectionFromYourLocation') })}
+            />
+          )
         }
 
         <ToggleControl
@@ -364,11 +369,6 @@ const MapSettings = ({ attributes, setAttributes }) => {
           onChange={(newValue) => setAttributes({ mapOptions: updateData(mapOptions, newValue, 'allowUsersToSetFromToLocation') })}
         /> */}
         <ToggleControl
-          label="Show Print Map Button"
-          checked={showPrintButton}
-          onChange={(newValue) => setAttributes({ mapOptions: updateData(mapOptions, newValue, 'showPrintButton') })}
-        />
-        <ToggleControl
           label="Set Search Location On Double Click"
           checked={setSearchLocationOnDblClick}
           onChange={(newValue) => setAttributes({ mapOptions: updateData(mapOptions, newValue, 'setSearchLocationOnDblClick') })}
@@ -377,6 +377,11 @@ const MapSettings = ({ attributes, setAttributes }) => {
           label="Show Location Details OnClick"
           checked={showLocationDetailsOnClick}
           onChange={(newValue) => setAttributes({ mapOptions: updateData(mapOptions, newValue, 'showLocationDetailsOnClick') })}
+        />
+        <ToggleControl
+          label="Show Print Map Button"
+          checked={showPrintButton}
+          onChange={(newValue) => setAttributes({ mapOptions: updateData(mapOptions, newValue, 'showPrintButton') })}
         />
         {
           mapOptions.showPrintButton && (

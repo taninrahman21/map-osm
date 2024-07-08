@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2024-07-07T11:48:25+00:00\n"
+"POT-Creation-Date: 2024-07-07T12:43:43+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.10.0\n"
 "X-Domain: map-osm\n"
@@ -35,62 +35,62 @@ msgid "http://bplugins.com"
 msgstr ""
 
 #: dist/editor.js:14
-#: dist/editor.js:53032
+#: dist/editor.js:53038
 msgid "Map Settings"
 msgstr ""
 
 #: dist/editor.js:14
-#: dist/editor.js:53038
+#: dist/editor.js:53044
 msgid "From"
 msgstr ""
 
 #: dist/editor.js:14
-#: dist/editor.js:53042
-#: dist/editor.js:53085
+#: dist/editor.js:53048
+#: dist/editor.js:53094
 msgid "SEARCH"
 msgstr ""
 
 #: dist/editor.js:14
-#: dist/editor.js:53056
+#: dist/editor.js:53063
 msgid "You need to turn off this toggle to edit from location"
 msgstr ""
 
 #: dist/editor.js:14
-#: dist/editor.js:53063
-#: dist/editor.js:53100
+#: dist/editor.js:53072
+#: dist/editor.js:53109
 msgid "Latitude"
 msgstr ""
 
 #: dist/editor.js:14
-#: dist/editor.js:52960
-#: dist/editor.js:53004
+#: dist/editor.js:52964
+#: dist/editor.js:53009
 msgid "Please enter a valid latitude between -90 and 90."
 msgstr ""
 
 #: dist/editor.js:14
-#: dist/editor.js:53068
-#: dist/editor.js:53106
+#: dist/editor.js:53077
+#: dist/editor.js:53115
 msgid "Longitude"
 msgstr ""
 
 #: dist/editor.js:14
-#: dist/editor.js:52983
-#: dist/editor.js:53025
+#: dist/editor.js:52988
+#: dist/editor.js:53031
 msgid "Please enter a valid longitude between -180 and 180."
 msgstr ""
 
 #: dist/editor.js:14
-#: dist/editor.js:53127
+#: dist/editor.js:53138
 msgid "Marker Text"
 msgstr ""
 
 #: dist/editor.js:14
-#: dist/editor.js:53133
+#: dist/editor.js:53144
 msgid "Zoom Level"
 msgstr ""
 
 #: dist/editor.js:14
-#: dist/editor.js:53141
+#: dist/editor.js:53152
 msgid "Map Layer"
 msgstr ""
 
@@ -99,66 +99,66 @@ msgid "Map Options"
 msgstr ""
 
 #: dist/editor.js:14
-#: dist/editor.js:55442
+#: dist/editor.js:55453
 msgid "Map styles"
 msgstr ""
 
 #: dist/editor.js:14
-#: dist/editor.js:55446
+#: dist/editor.js:55457
 msgid "Width"
 msgstr ""
 
 #: dist/editor.js:14
-#: dist/editor.js:55459
+#: dist/editor.js:55470
 msgid "Height"
 msgstr ""
 
 #: dist/editor.js:14
-#: dist/editor.js:55482
+#: dist/editor.js:55493
 msgid "Marker Styles"
 msgstr ""
 
 #: dist/editor.js:14
-#: dist/editor.js:55486
+#: dist/editor.js:55497
 msgid "Marker Icon Size"
 msgstr ""
 
 #: dist/editor.js:14
-#: dist/editor.js:55499
+#: dist/editor.js:55510
 msgid "Marker Icon Color"
 msgstr ""
 
 #: dist/editor.js:14
-#: dist/editor.js:55507
+#: dist/editor.js:55518
 msgid "Current Location Marker Color"
 msgstr ""
 
 #: dist/editor.js:14
-#: dist/editor.js:55515
+#: dist/editor.js:55526
 msgid "Start Point Marker Color"
 msgstr ""
 
 #: dist/editor.js:14
-#: dist/editor.js:55524
+#: dist/editor.js:55535
 msgid "End Point Marker Color"
 msgstr ""
 
 #: dist/editor.js:14
-#: dist/editor.js:55533
+#: dist/editor.js:55544
 msgid "Routing Line Color"
 msgstr ""
 
 #: dist/editor.js:340
 #: dist/script.js:332
-#: dist/editor.js:59125
-#: dist/script.js:37153
+#: dist/editor.js:59132
+#: dist/script.js:37165
 msgid "Export as Image"
 msgstr ""
 
 #: dist/editor.js:340
 #: dist/script.js:332
-#: dist/editor.js:59126
-#: dist/script.js:37154
+#: dist/editor.js:59133
+#: dist/script.js:37166
 msgid "Export as PDF"
 msgstr ""
 

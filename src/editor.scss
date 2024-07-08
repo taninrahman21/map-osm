@@ -68,6 +68,7 @@ $primaryColor: #4527a4;
 .custom-layers-control .layers-wrapper .layers-trigger img {
   width: 100%;
   height: 100%;
+  border-radius: 8px;
 }
 .custom-layers-control .layers-wrapper .layers-trigger p {
   position: absolute;
@@ -101,8 +102,10 @@ $primaryColor: #4527a4;
   color: blue;
 }
 .custom-layers-control .layers-wrapper .layer-options .layer-option img {
-  width: 38px;
+  width: 40px;
+  height: 40px;
   margin: 0 auto;
+  border-radius: 7px;
 }
 
 .custom-layers-control .layers-wrapper:hover .layer-options {
