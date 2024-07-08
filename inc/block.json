@@ -28,9 +28,9 @@
           "mobile": "310px"
         },
         "width": {
-          "desktop": "600px",
-          "tablet": "500px",
-          "mobile": "250px"
+          "desktop": "100%",
+          "tablet": "100%",
+          "mobile": "100%"
         },
         "border": {
           "width": "2px",

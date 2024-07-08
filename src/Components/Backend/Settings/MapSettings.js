@@ -307,16 +307,23 @@ const MapSettings = ({ attributes, setAttributes }) => {
           )
         }
 
-        <ToggleControl
-          label="Show Marker Text"
-          checked={showMarkerText}
-          onChange={(newValue) => setAttributes({ mapOptions: updateData(mapOptions, newValue, 'showMarkerText') })}
-        />
-        <TextControl
-          label={__('Marker Text', 'map-osm')}
-          value={markerText}
-          onChange={(value) => setAttributes({ mapOsm: updateData(mapOsm, value, "markerText") })}
-        />
+        {
+          (latitude && longitude) && (
+            <>
+              <ToggleControl
+                label="Show Marker PopUp Text"
+                checked={showMarkerText}
+                onChange={(newValue) => setAttributes({ mapOptions: updateData(mapOptions, newValue, 'showMarkerText') })}
+              />
+              {showMarkerText && <TextControl
+                label={__('Marker Text', 'map-osm')}
+                value={markerText}
+                onChange={(value) => setAttributes({ mapOsm: updateData(mapOsm, value, "markerText") })}
+              />
+              }
+            </>
+          )
+        }
 
         <RangeControl
           label={__('Zoom Level', 'map-osm')}

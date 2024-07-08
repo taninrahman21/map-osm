@@ -90,7 +90,7 @@ const MapOsm = compose(withSelect((select) => { return { device: select("core/ed
       maxZoom: 19
     });
 
-    const satelliteLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+    const satelliteLayer = L.tileLayer('https://mts0.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
       attribution: '&copy; <a href="https://www.bplugins.com">bPlugins</a> contributors',
       maxZoom: 19
     });
@@ -397,7 +397,7 @@ const MapOsm = compose(withSelect((select) => { return { device: select("core/ed
     toPng(document.getElementById('map'))
       .then((dataUrl) => {
         const pdf = new jsPDF();
-        pdf.addImage(dataUrl, 'PNG', 0, 0, 210, 297);
+        pdf.addImage(dataUrl, 'PNG', 0, 0, 210, 210);
         pdf.save('map.pdf');
       })
       .catch((error) => {
